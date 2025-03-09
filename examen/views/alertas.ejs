@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="/bootstrap-icons.css">
 </head>
 <body>
+    <%- include('partials/header') %>
     <h1><%= title %></h1>
     <p>Bienvenido a <%= title %></p>
 
     <button class="btn btn-primary" id="simpleAlert">Alerta Simple</button>
     <button class="btn btn-warning" id="confirmAlert">Alerta con Confirmación</button>
     <button class="btn btn-success" id="inputAlert">Alerta con Input</button>
+
+    <%- include('partials/footer') %>
 
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -1,14 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/bootstrap-icons.css">
+    <style>
+      /* Asegura que el contenido ocupe todo el espacio disponible y el footer se quede al final */
+      main {
+        display: flex;
+        flex-direction: column;
+
+      }
+
+      .containerMain {
+        flex: 1;
+        text-align: center; /* Alinea el contenido en el centro */
+        padding-top: 50px;
+      }
+
+
+    </style>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <button type="button" class="btn btn-primary">Primary</button>
+    <!-- Header (puedes personalizarlo o dejarlo vacío según sea necesario) -->
+    <%- include('partials/header') %>
+<main>
+    <div class="containerMain">
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+      <button type="button" class="btn btn-primary">Get Started</button>
+    </div>
+  </main>
+    <!-- Footer (puedes personalizarlo o dejarlo vacío según sea necesario) -->
+    <%- include('partials/footer') %>
   </body>
 </html>
