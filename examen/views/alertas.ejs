@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-icons.css">
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p>Bienvenido a <%= title %></p>
+
+    <button class="btn btn-primary" id="simpleAlert">Alerta Simple</button>
+    <button class="btn btn-warning" id="confirmAlert">Alerta con Confirmación</button>
+    <button class="btn btn-success" id="inputAlert">Alerta con Input</button>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Alerta simple
+        document.getElementById('simpleAlert').addEventListener('click', function () {
+            Swal.fire('¡Hola!', 'Esto es una alerta simple', 'info');
+        });
+
+        // Alerta con confirmación
+        document.getElementById('confirmAlert').addEventListener('click', function () {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Eliminado', 'El archivo ha sido eliminado.', 'success');
+                }
+            });
+        });
+
+        // Alerta con input de texto
+        document.getElementById('inputAlert').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Ingresa tu nombre',
+                input: 'text',
+                inputPlaceholder: 'Escribe aquí...',
+                showCancelButton: true,
+                confirmButtonText: 'Enviar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(`Hola, ${result.value}!`, 'Tu nombre ha sido registrado.', 'success');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

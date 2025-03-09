@@ -1,0 +1,5 @@
+[
+    { "nombre": "Catedral de Málaga", "lat": 36.7202, "lng": -4.4203, "descripcion": "Una de las joyas arquitectónicas de Málaga." },
+    { "nombre": "Castillo de Gibralfaro", "lat": 36.7205, "lng": -4.4094, "descripcion": "Castillo con vistas espectaculares de la ciudad." },
+    { "nombre": "Museo Picasso", "lat": 36.7213, "lng": -4.4196, "descripcion": "Museo dedicado a Pablo Picasso, nacido en Málaga." }
+]
