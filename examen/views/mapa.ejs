@@ -1,61 +1,111 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="/css/bootstrap.css">
-    <link rel="stylesheet" href="/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel='stylesheet' href='/css/bootstrap.css'>
+    <link rel='stylesheet' href='/bootstrap-icons.css'>
+    <link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css' />
     <style>
         #map {
             height: 500px;
             width: 100%;
         }
+
+        .container {
+            display: flex;
+        }
+
+        #list {
+            overflow: auto;
+            max-height: 500px;
+            border-right: 1px solid #ccc;
+        }
     </style>
 </head>
+
 <body>
     <%- include('partials/header') %>
-    <div class="container mt-3">
-        <h1 class="text-center">Mapa Interactivo</h1>
-        <div id="map"></div>
-    </div>
-    <%- include('partials/footer') %>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Iniciar el mapa centrado en Málaga
-            var map = L.map('map').setView([36.7213, -4.4214], 13);
+        <h1 class='text-center'>Mapa Interactivo de Museos</h1>
+        <div class='container mt-3'>
 
-            // Capa base de OpenStreetMap
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            <div class='container'>
+                <div id='list' class="col-4 p-1"></div>
+                <div id='map-container' class="col-8">
+                    <div id='map'></div>
+                </div>
+            </div>
+        </div>
+        <%- include('partials/footer') %>
+            <script src='https://unpkg.com/leaflet/dist/leaflet.js'></script>
+            <script src='/js/bootstrap.bundle.min.js'></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var map = L.map('map').setView([36.7213, -4.4214], 13);
 
-            // Intentar obtener la ubicación del usuario
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var userLat = position.coords.latitude;
-                    var userLng = position.coords.longitude;
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
 
-                    L.marker([userLat, userLng]).addTo(map)
-                        .bindPopup("¡Estás aquí!").openPopup();
+                    var listContainer = document.getElementById("list");
 
-                    map.setView([userLat, userLng], 14);
-                });
-            }
-
-            // Cargar puntos de interés desde el JSON
-            fetch('/api/puntos')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(punto => {
-                        L.marker([punto.lat, punto.lng]).addTo(map)
-                            .bindPopup(`<b>${punto.nombre}</b><br>${punto.descripcion}`);
+                    // icono del museo
+                    var museumIcon = L.icon({
+                        iconUrl: '/images/museum.png', 
+                        iconSize: [32, 32], 
+                        iconAnchor: [16, 32], 
+                        popupAnchor: [0, -32] 
                     });
-                })
-                .catch(error => console.error("Error cargando puntos de interés:", error));
-        });
-    </script>
+
+                    fetch('/api/museos')
+                        .then(response => response.json())
+                        .then(data => {
+                            data.features.forEach(museo => {
+                                var coords = museo.geometry.coordinates;
+                                var props = museo.properties;
+                                var marker = L.marker([coords[1], coords[0]], { icon: museumIcon }).addTo(map);
+
+                                function mostrarInfo() {
+                                    map.setView([coords[1], coords[0]], 16);
+
+                                    let content = `
+                        <a href="${props.URL}" target="_blank" class="mt-2" ${props.URL ? "" : "style='display:none'"}>${props.URL}</a>
+                    `;
+
+                                    Swal.fire({
+                                        title: props.NOMBRE,
+                                        html: content,
+                                        imageUrl: '/images/museum.png', 
+                                        imageWidth: 50, 
+                                        imageHeight: 50, 
+                                        imageAlt: 'Icono del museo',
+                                        showCloseButton: true,
+                                        showConfirmButton: true
+                                    });
+                                }
+
+                                marker.on("click", mostrarInfo);
+
+
+                                var museoItem = document.createElement('div');
+                                museoItem.className = "list-group-item";
+                                museoItem.innerHTML = `<strong>${props.NOMBRE}</strong><br><hr>`;
+                                museoItem.style.cursor = "pointer";
+                                museoItem.onclick = mostrarInfo;
+
+                                listContainer.appendChild(museoItem);
+                            });
+                        })
+                        .catch(error => console.error("Error cargando museos:", error));
+                });
+
+            </script>
+
+
 </body>
+
 </html>

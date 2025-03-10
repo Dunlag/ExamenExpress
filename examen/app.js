@@ -29,56 +29,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// Ruta para obtener puntos de interés desde el JSON
-app.get('/api/puntos', (req, res) => {
-  fs.readFile(path.join(__dirname, 'data', 'puntos.json'), 'utf8', (err, data) => {
-      if (err) {
-          res.status(500).json({ error: 'Error al cargar los datos' });
-      } else {
-          res.json(JSON.parse(data));
-      }
-  });
-});
 
 
-const peliculasPath = path.join(__dirname, 'data', 'peliculas.json');
-
-// Obtener lista de películas
-app.get('/api/peliculas', (req, res) => {
-    fs.readFile(peliculasPath, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Error al cargar los datos' });
-        res.json({ data: JSON.parse(data) });
-    });
-});
-
-// Añadir película
-app.post('/api/peliculas', (req, res) => {
-    fs.readFile(peliculasPath, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Error al leer los datos' });
-
-        let peliculas = JSON.parse(data);
-        let nuevaPelicula = { id: peliculas.length + 1, ...req.body };
-        peliculas.push(nuevaPelicula);
-
-        fs.writeFile(peliculasPath, JSON.stringify(peliculas, null, 2), (err) => {
-            if (err) return res.status(500).json({ error: 'Error al guardar la película' });
-            res.json({ mensaje: 'Película añadida' });
-        });
-    });
-});
-
-// Eliminar película
-app.delete('/api/peliculas/:id', (req, res) => {
-    fs.readFile(peliculasPath, 'utf8', (err, data) => {
-        if (err) return res.status(500).json({ error: 'Error al leer los datos' });
-
-        let peliculas = JSON.parse(data);
-        let nuevasPeliculas = peliculas.filter(p => p.id != req.params.id);
-
-        fs.writeFile(peliculasPath, JSON.stringify(nuevasPeliculas, null, 2), (err) => {
-            if (err) return res.status(500).json({ error: 'Error al eliminar la película' });
-            res.json({ mensaje: 'Película eliminada' });
-        });
+// Nueva ruta para cargar datos desde el archivo GeoJSON
+app.get('/api/museos', (req, res) => {
+    fs.readFile(path.join(__dirname, 'data', 'museos.geojson'), 'utf8', (err, data) => {
+        if (err) {
+            res.status(500).json({ error: 'Error al cargar los datos' });
+        } else {
+            try {
+                const geojson = JSON.parse(data);
+                res.json(geojson);
+            } catch (parseError) {
+                res.status(500).json({ error: 'Error con el archivo GeoJSON' });
+            }
+        }
     });
 });
 
