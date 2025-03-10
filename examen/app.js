@@ -30,8 +30,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
-
-// Nueva ruta para cargar datos desde el archivo GeoJSON
+// ruta para cargar datos desde el archivo GeoJSON
 app.get('/api/museos', (req, res) => {
     fs.readFile(path.join(__dirname, 'data', 'museos.geojson'), 'utf8', (err, data) => {
         if (err) {

@@ -9,22 +9,6 @@
     <link rel='stylesheet' href='/css/bootstrap.css'>
     <link rel='stylesheet' href='/bootstrap-icons.css'>
     <link rel='stylesheet' href='https://unpkg.com/leaflet/dist/leaflet.css' />
-    <style>
-        #map {
-            height: 500px;
-            width: 100%;
-        }
-
-        .container {
-            display: flex;
-        }
-
-        #list {
-            overflow: auto;
-            max-height: 500px;
-            border-right: 1px solid #ccc;
-        }
-    </style>
 </head>
 
 <body>
@@ -32,7 +16,7 @@
         <h1 class='text-center'>Mapa Interactivo de Museos</h1>
         <div class='container mt-3'>
 
-            <div class='container'>
+            <div class='container mt-5'>
                 <div id='list' class="col-4 p-1"></div>
                 <div id='map-container' class="col-8">
                     <div id='map'></div>
@@ -55,10 +39,10 @@
 
                     // icono del museo
                     var museumIcon = L.icon({
-                        iconUrl: '/images/museum.png', 
-                        iconSize: [32, 32], 
-                        iconAnchor: [16, 32], 
-                        popupAnchor: [0, -32] 
+                        iconUrl: '/images/museum.png',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32]
                     });
 
                     fetch('/api/museos')
@@ -72,16 +56,14 @@
                                 function mostrarInfo() {
                                     map.setView([coords[1], coords[0]], 16);
 
-                                    let content = `
-                        <a href="${props.URL}" target="_blank" class="mt-2" ${props.URL ? "" : "style='display:none'"}>${props.URL}</a>
-                    `;
+                                    let content = `<a href="${props.URL}" target="_blank" class="mt-2" ${props.URL ? "" : "style='display:none'"}>${props.URL}</a>`;
 
                                     Swal.fire({
                                         title: props.NOMBRE,
                                         html: content,
-                                        imageUrl: '/images/museum.png', 
-                                        imageWidth: 50, 
-                                        imageHeight: 50, 
+                                        imageUrl: '/images/museum.png',
+                                        imageWidth: 50,
+                                        imageHeight: 50,
                                         imageAlt: 'Icono del museo',
                                         showCloseButton: true,
                                         showConfirmButton: true
@@ -93,7 +75,7 @@
 
                                 var museoItem = document.createElement('div');
                                 museoItem.className = "list-group-item";
-                                museoItem.innerHTML = `<strong>${props.NOMBRE}</strong><br><hr>`;
+                                museoItem.innerHTML = `<p>${props.NOMBRE}</p><br>`;
                                 museoItem.style.cursor = "pointer";
                                 museoItem.onclick = mostrarInfo;
 
